@@ -39,7 +39,7 @@ from flask import Flask, redirect, render_template, request, url_for
 app = Flask(__name__)
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-
+result = ' '
 @app.route("/", methods=("GET", "POST"))
 def index():
     if request.method == "POST":
@@ -50,12 +50,17 @@ def index():
             max_tokens=256,
             temperature=1,
         )
+        global result
         result = response.choices[0].text
-        print(result)
         return redirect(url_for("index", result=result))
-
+    response2 = openai.Image.create(
+        prompt=result,
+        n=1,
+        size="256x256"
+    )
     result = request.args.get("result")
-    return render_template("index.html", result=result)
+    result2 = response2['data'][0]['url']
+    return render_template("index.html", result=result, image_url=result2)
 
 
 def generate_prompt(words):
@@ -69,3 +74,13 @@ def generate_prompt(words):
              words.capitalize()
     )
 
+
+@app.route("/image", methods=("GET", "POST"))
+def image():
+    response = openai.Image.create(
+        prompt="a white siamese cat",
+        n=1,
+        size="512x512"
+    )
+    result = response['data'][0]['url']
+    return render_template("template.html", image_url=result)
