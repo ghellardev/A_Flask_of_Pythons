@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<head>
+  <title>Poem Generator</title>
+  <link
+    rel="shortcut icon"
+    href="{{ url_for('static', filename='dog.png') }}"
+  />
+  <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}" />
+</head>
+
+<body>
+  <h3>What words should the poem use ?</h3>
+  <form action="/" method="post">
+    <input type="text" name="words" placeholder="Enter your words here" required />
+    <input type="submit" value="Generate Poem" />
+  </form>
+  {% if result %}
+      <h2>Your Poem:</h2>
+      {% for line in result.split('\n') %}
+        <p>{{ line }}</p>
+      {% endfor %}
+    {% endif %}
+</body>
