@@ -35,6 +35,7 @@ import os
 
 import openai
 from flask import Flask, redirect, render_template, request, url_for
+from gtts import gTTS
 
 app = Flask(__name__)
 openai.api_key = os.getenv("OPENAI_API_KEY")
@@ -44,14 +45,17 @@ result = ' '
 def index():
     if request.method == "POST":
         words = request.form["words"]
+        prompt = generate_prompt(words)
         response = openai.Completion.create(
             model="text-davinci-003",
-            prompt=generate_prompt(words),
+            prompt=prompt,
             max_tokens=256,
             temperature=1,
         )
         global result
         result = response.choices[0].text
+        myobj = gTTS(text=result, lang='en', slow=False)
+        myobj.save("static/poem.mp3")
         return redirect(url_for("index", result=result))
     response2 = openai.Image.create(
         prompt=result,
@@ -74,13 +78,3 @@ def generate_prompt(words):
              words.capitalize()
     )
 
-
-@app.route("/image", methods=("GET", "POST"))
-def image():
-    response = openai.Image.create(
-        prompt="a white siamese cat",
-        n=1,
-        size="512x512"
-    )
-    result = response['data'][0]['url']
-    return render_template("template.html", image_url=result)
