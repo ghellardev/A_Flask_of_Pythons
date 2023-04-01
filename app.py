@@ -41,6 +41,8 @@ app = Flask(__name__)
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 result = ' '
+
+
 @app.route("/", methods=("GET", "POST"))
 def index():
     if request.method == "POST":
@@ -75,6 +77,5 @@ def generate_prompt(words):
     return """Generate a 5 line poem using the words from this list {}
          first line should be the title  which should not contain the words from the list followed by 3 empty lines
          """.format(
-             words.capitalize()
+        words.capitalize()
     )
-
