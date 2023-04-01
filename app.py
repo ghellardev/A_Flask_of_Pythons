@@ -39,7 +39,7 @@ from gtts import gTTS
 
 app = Flask(__name__)
 
-openai.api_key = "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"
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 
 result = ' '
