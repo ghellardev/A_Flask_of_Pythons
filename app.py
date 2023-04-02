@@ -40,8 +40,8 @@ import openai
 from flask import Flask, redirect, render_template, request, url_for
 from gtts import gTTS
 
-nltk.download('punkt')
-nltk.download('stopwords')
+# nltk.download('punkt')
+# nltk.download('stopwords')
 app = Flask(__name__)
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
@@ -59,7 +59,7 @@ def index():
             model="text-davinci-003",
             prompt=prompt,
             max_tokens=256,
-            temperature=1,
+            temperature=0,
         )
         global result
         result = response.choices[0].text
@@ -93,7 +93,7 @@ def index():
         myobj.save("static/poem.mp3")
         return redirect(url_for("index", result=result))
     response2 = openai.Image.create(
-        prompt="low quality image with following themes:\n" + str(matches),
+        prompt="low quality image based on keywords in this list:\n" + str(matches),
         n=1,
         size="256x256"
     )
