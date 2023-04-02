@@ -40,7 +40,7 @@ import openai
 from flask import Flask, redirect, render_template, request, url_for
 from gtts import gTTS
 
-nltk.download('all-corpora')
+nltk.download('punkt')
 app = Flask(__name__)
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
